@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bio.name }} | Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .profile-img { width: 180px; height: 180px; object-fit: cover; border: 5px solid #fff; }
+        .hero-section { background: #f8f9fa; padding: 60px 0; }
+        .card { transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+
+    <header class="hero-section text-center border-bottom">
+        <div class="container">
+            {% if bio.profile_pic %}
+                <img src="{{ bio.profile_pic.url }}" class="rounded-circle profile-img shadow mb-3" alt="{{ bio.name }}">
+            {% endif %}
+            <h1 class="display-4 fw-bold">{{ bio.name }}</h1>
+            <p class="lead text-secondary">{{ bio.job_title }}</p>
+            <p class="mx-auto" style="max-width: 700px;">{{ bio.description }}</p>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <section class="mb-5">
+                    <h2 class="mb-4">Work Experience</h2>
+                    {% for exp in experiences %}
+                    <div class="mb-4 border-start ps-3 border-primary border-3">
+                        <h5 class="mb-0">{{ exp.role }}</h5>
+                        <p class="text-primary mb-1">{{ exp.company }} | {{ exp.start_date }} - {% if exp.end_date %}{{ exp.end_date }}{% else %}Present{% endif %}</p>
+                        <p class="text-muted">{{ exp.description }}</p>
+                    </div>
+                    {% empty %}
+                        <p>No experience added yet.</p>
+                    {% endfor %}
+                </section>
+
+                <section class="mb-5">
+                    <h2 class="mb-4">Education</h2>
+                    {% for edu in educations %}
+                    <div class="card mb-3 shadow-sm p-3">
+                        <h5>{{ edu.degree }}</h5>
+                        <p class="mb-0 text-secondary">{{ edu.institute }} ({{ edu.passing_year }})</p>
+                        <small class="text-success fw-bold">Grade: {{ edu.grade }}</small>
+                    </div>
+                    {% endfor %}
+                </section>
+            </div>
+
+            <div class="col-lg-4">
+                <section class="mb-5">
+                    <h2 class="mb-4">Skills</h2>
+                    {% for skill in skills %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>{{ skill.name }}</span>
+                            <span>{{ skill.proficiency_percentage }}%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-dark" role="progressbar" style="width: {{ skill.proficiency_percentage }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+            </div>
+        </div>
+
+        <section class="mt-5">
+            <h2 class="text-center mb-5">Recent Projects</h2>
+            <div class="row g-4">
+                {% for project in projects %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text text-muted small">{{ project.tech_used }}</p>
+                            <p class="card-text">{{ project.description }}</p>
+                            {% if project.link %}
+                                <a href="{{ project.link }}" class="btn btn-outline-primary btn-sm" target="_blank">View Project</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    <p class="text-center w-100">Add some projects in the admin panel!</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <p class="mb-0">&copy; 2026 {{ bio.name }} | Built with Django</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
